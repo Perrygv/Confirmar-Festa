@@ -1,130 +1,622 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirmar presença</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmar presença</title>
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
+  <style>
+    :root {
+      --fundo: #fff4df;
+      --texto: #3b2f2f;
+      --card: #fffaf0;
+      --verde: #2f9e44;
+      --vermelho: #d9480f;
+      --sombra: rgba(59, 47, 47, 0.18);
+    }
 
-body{
-    background:linear-gradient(135deg,#89cff0,#f3d9fa);
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.caixa{
-    background:white;
-    padding:40px;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);
-    text-align:center;
-    width:420px;
-}
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, #fff9ec 0%, var(--fundo) 55%, #f8e5bd 100%);
+      color: var(--texto);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
 
-h1{
-    margin-bottom:30px;
-}
+    .bandeirinhas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 95px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.95;
+      animation: entradaTopo 0.9s ease-out both;
+    }
 
-button{
-    padding:15px 25px;
-    border:none;
-    border-radius:12px;
-    font-size:18px;
-    cursor:pointer;
-    transition:.2s;
-}
+    .linha {
+      position: absolute;
+      top: 25px;
+      left: -5%;
+      width: 110%;
+      height: 2px;
+      background: rgba(59, 47, 47, 0.25);
+      transform: rotate(-2deg);
+    }
 
-#sim{
-    background:#43a047;
-    color:white;
-}
+    .bandeira {
+      position: absolute;
+      top: 27px;
+      width: 28px;
+      height: 34px;
+      clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+      transform-origin: top center;
+      animation: balancar 2.5s ease-in-out infinite;
+      opacity: 0.9;
+    }
 
-#sim:hover{
-    transform:scale(1.05);
-}
+    .b1 { left: 8%;  background: #f03e3e; animation-delay: .1s; }
+    .b2 { left: 18%; background: #f59f00; animation-delay: .3s; }
+    .b3 { left: 29%; background: #2f9e44; animation-delay: .5s; }
+    .b4 { left: 41%; background: #1c7ed6; animation-delay: .2s; }
+    .b5 { left: 55%; background: #f03e3e; animation-delay: .4s; }
+    .b6 { left: 67%; background: #f59f00; animation-delay: .6s; }
+    .b7 { left: 79%; background: #2f9e44; animation-delay: .3s; }
+    .b8 { left: 90%; background: #1c7ed6; animation-delay: .5s; }
 
-#nao{
-    background:#e53935;
-    color:white;
-    position:fixed;
-}
+    .container {
+      width: min(92vw, 430px);
+      text-align: center;
+      padding: 36px 26px 24px;
+      border-radius: 28px;
+      background: rgba(255, 250, 240, 0.78);
+      box-shadow: 0 20px 45px var(--sombra);
+      backdrop-filter: blur(7px);
+      position: relative;
+      z-index: 2;
+      animation: entradaCard 0.8s ease-out both;
+    }
 
-#mensagem{
-    margin-top:25px;
-    font-size:22px;
-    color:#43a047;
-    display:none;
-}
-</style>
+    .subtitulo {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8a5a2b;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 7vw, 2.35rem);
+      line-height: 1.12;
+      margin-bottom: 18px;
+    }
+
+    .fogueira {
+      width: 160px;
+      margin: 4px auto 22px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .25s ease;
+    }
+
+    .fogueira:hover {
+      transform: scale(1.04);
+    }
+
+    .chama {
+      transform-origin: center bottom;
+      animation: tremular 1.25s ease-in-out infinite alternate;
+    }
+
+    .chama2 {
+      animation-delay: .2s;
+    }
+
+    .tronco {
+      transform-origin: center;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      min-height: 58px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 22px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    #sim {
+      background: var(--verde);
+      color: #fff;
+    }
+
+    #sim:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+    }
+
+    #nao {
+      background: var(--vermelho);
+      color: #fff;
+      position: fixed;
+      z-index: 5;
+      left: 50%;
+      top: 68%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+
+    .recado {
+      min-height: 28px;
+      margin: 18px 0 8px;
+      font-size: 0.95rem;
+      color: #8a5a2b;
+      font-weight: bold;
+    }
+
+    .assinatura {
+      margin-top: 22px;
+      font-size: 0.78rem;
+      opacity: 0.72;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(59, 47, 47, 0.35);
+      z-index: 20;
+      padding: 24px;
+    }
+
+    .modal.ativo {
+      display: grid;
+    }
+
+    .modal-card {
+      width: min(92vw, 420px);
+      background: #fffaf0;
+      border-radius: 28px;
+      padding: 34px 26px;
+      text-align: center;
+      box-shadow: 0 18px 50px rgba(0,0,0,.24);
+      animation: aparecer .35s ease both;
+    }
+
+    .modal-card h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .modal-card p {
+      font-size: 1.05rem;
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .fechar {
+      background: #3b2f2f;
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .easter {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      opacity: 0.35;
+      cursor: pointer;
+      z-index: 10;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .easter:hover {
+      opacity: 0.85;
+    }
+
+    .ornitorrinco {
+      position: fixed;
+      left: 18px;
+      bottom: -160px;
+      width: 150px;
+      z-index: 15;
+      transition: bottom .55s cubic-bezier(.2, 1.2, .4, 1);
+      pointer-events: none;
+    }
+
+    .ornitorrinco.ativo {
+      bottom: 54px;
+    }
+
+    .balao {
+      position: fixed;
+      left: 118px;
+      bottom: 172px;
+      background: white;
+      border-radius: 16px;
+      padding: 10px 12px;
+      width: 170px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.14);
+      font-size: .86rem;
+      z-index: 16;
+      display: none;
+    }
+
+    .balao.ativo {
+      display: block;
+      animation: aparecer .3s ease both;
+    }
+
+    @keyframes balancar {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(4deg); }
+    }
+
+    @keyframes tremular {
+      from { transform: scaleX(.94) scaleY(1.02) rotate(-1.5deg); }
+      to { transform: scaleX(1.05) scaleY(.97) rotate(1.5deg); }
+    }
+
+    @keyframes entradaTopo {
+      from { transform: translateY(-70px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes entradaCard {
+      from { transform: translateY(18px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes aparecer {
+      from { transform: scale(.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 18px;
+        align-items: center;
+      }
+
+      .container {
+        padding: 32px 20px 22px;
+      }
+
+      .fogueira {
+        width: 140px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 310px;
+      }
+
+      #nao {
+        width: auto;
+        max-width: none;
+        padding-inline: 20px;
+      }
+
+      .bandeira {
+        width: 22px;
+        height: 29px;
+      }
+
+      .balao {
+        left: 92px;
+        width: 160px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="bandeirinhas" aria-hidden="true">
+    <div class="linha"></div>
+    <div class="bandeira b1"></div>
+    <div class="bandeira b2"></div>
+    <div class="bandeira b3"></div>
+    <div class="bandeira b4"></div>
+    <div class="bandeira b5"></div>
+    <div class="bandeira b6"></div>
+    <div class="bandeira b7"></div>
+    <div class="bandeira b8"></div>
+  </div>
 
-<div class="caixa">
-    <h1>Confirmar presença na festa do Perry?</h1>
+  <main class="container">
+    <div class="subtitulo">Convite especial</div>
 
-    <button id="sim">🎉 Sim! Não perderei por nada!</button>
+    <h1>Confirmar presença<br>na festa do Perry?</h1>
 
-    <div id="mensagem">
-        🥳 Perfeito! Te espero na festa!
+    <div class="fogueira" id="fogueira" title="Está quentinho por aqui...">
+      <svg viewBox="0 0 220 220" role="img" aria-label="Fogueira de festa junina">
+        <ellipse cx="110" cy="178" rx="74" ry="18" fill="rgba(90,60,30,.16)"/>
+        <g class="tronco">
+          <rect x="55" y="150" width="120" height="24" rx="12" fill="#8a4f22" transform="rotate(20 115 162)"/>
+          <rect x="45" y="150" width="130" height="24" rx="12" fill="#a4622a" transform="rotate(-20 110 162)"/>
+          <circle cx="62" cy="151" r="9" fill="#d7a56b"/>
+          <circle cx="167" cy="151" r="9" fill="#d7a56b"/>
+        </g>
+        <path class="chama chama2" d="M111 151c-31-24-28-55-9-82 5 22 20 27 24 47 11-13 13-30 8-48 32 31 37 71 7 93-10 8-22 8-30-10z" fill="#ff922b"/>
+        <path class="chama" d="M108 151c-24-18-23-44-7-64 4 18 17 22 19 38 8-9 9-22 6-34 25 25 28 55 5 72-8 6-17 5-23-12z" fill="#ffd43b"/>
+        <path class="chama" d="M109 153c-13-11-13-26-3-38 2 10 10 14 11 23 5-5 6-13 4-21 15 16 16 34 3 44-5 4-11 3-15-8z" fill="#fff3bf"/>
+      </svg>
     </div>
-</div>
 
-<button id="nao">🙈 Não posso</button>
+    <div class="botoes">
+      <button id="sim">🎉 Sim! Não perderei por nada!</button>
+    </div>
 
-<script>
+    <div class="recado" id="recado"></div>
 
-const botaoNao = document.getElementById("nao");
+    <div class="assinatura">Feito com ❤️ para celebrar os 25 anos do Perry.</div>
+  </main>
 
-function moverBotao(){
+  <button id="nao">Não posso</button>
 
-    const largura = window.innerWidth - botaoNao.offsetWidth;
-    const altura = window.innerHeight - botaoNao.offsetHeight;
+  <div class="easter" id="easter" title="hmm...">🦶</div>
 
-    const x = Math.random()*largura;
-    const y = Math.random()*altura;
+  <div class="ornitorrinco" id="ornitorrinco">
+    <svg viewBox="0 0 220 170" aria-hidden="true">
+      <ellipse cx="110" cy="92" rx="70" ry="48" fill="#8b6f47"/>
+      <ellipse cx="72" cy="85" rx="54" ry="28" fill="#d49a4a"/>
+      <circle cx="96" cy="66" r="8" fill="#2b2118"/>
+      <circle cx="124" cy="66" r="8" fill="#2b2118"/>
+      <circle cx="99" cy="63" r="2.5" fill="#fff"/>
+      <circle cx="127" cy="63" r="2.5" fill="#fff"/>
+      <ellipse cx="73" cy="95" rx="43" ry="17" fill="#c7893b"/>
+      <path d="M163 94c32 13 42 43 12 55-22 9-50-6-55-27z" fill="#6f5635"/>
+      <path d="M62 118c-15 15-35 15-43 5 14-7 23-15 30-27z" fill="#6f5635"/>
+      <path d="M67 33h80l-13 22H80z" fill="#d8a532"/>
+      <rect x="82" y="19" width="52" height="18" rx="5" fill="#d8a532"/>
+      <path d="M77 37h62" stroke="#8a5a2b" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+  </div>
 
-    botaoNao.style.left = x+"px";
-    botaoNao.style.top = y+"px";
-}
+  <div class="balao" id="balao">
+    Perry?! Ah não... é o Perry aniversariante! 🎉
+  </div>
 
-// posição inicial
-moverBotao();
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h2>🥳 Presença confirmada!</h2>
+      <p>Sabia que você escolheria essa opção.<br><br>Obrigado por fazer parte desse momento tão especial. Te espero na festa! 💙</p>
+      <button class="fechar" id="fechar">Fechar</button>
+    </div>
+  </div>
 
-// quando o mouse chega perto
-document.addEventListener("mousemove",(e)=>{
+  <canvas id="confete"></canvas>
 
-    const rect = botaoNao.getBoundingClientRect();
+  <script>
+    const botaoNao = document.getElementById("nao");
+    const botaoSim = document.getElementById("sim");
+    const modal = document.getElementById("modal");
+    const fechar = document.getElementById("fechar");
+    const recado = document.getElementById("recado");
+    const canvas = document.getElementById("confete");
+    const ctx = canvas.getContext("2d");
 
-    const centroX = rect.left + rect.width/2;
-    const centroY = rect.top + rect.height/2;
+    const mensagens = [
+      "Essa opção está em manutenção. 😂",
+      "Resposta inválida. Tente a verde.",
+      "Tem certeza? Acho que não...",
+      "O sistema recusou essa tentativa.",
+      "Quase! Mas não foi dessa vez.",
+      "A festa exige sua presença. 😄"
+    ];
 
-    const distancia = Math.hypot(
-        e.clientX-centroX,
-        e.clientY-centroY
-    );
+    let tentativasNao = 0;
+    let confetes = [];
+    let animandoConfete = false;
 
-    if(distancia < 120){
-        moverBotao();
+    function ajustarCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
 
-});
+    ajustarCanvas();
+    window.addEventListener("resize", () => {
+      ajustarCanvas();
+      posicionarNaoInicial();
+    });
 
-document.getElementById("sim").onclick=function(){
-    document.getElementById("mensagem").style.display="block";
-}
+    function posicionarNaoInicial() {
+      const rectSim = botaoSim.getBoundingClientRect();
+      const largura = botaoNao.offsetWidth;
+      const x = Math.min(window.innerWidth - largura - 16, Math.max(16, rectSim.left + rectSim.width / 2 - largura / 2));
+      const y = Math.min(window.innerHeight - 70, rectSim.bottom + 18);
 
-</script>
+      botaoNao.style.left = x + "px";
+      botaoNao.style.top = y + "px";
+      botaoNao.style.transform = "none";
+    }
 
+    setTimeout(posicionarNaoInicial, 150);
+
+    function moverBotaoPara(x, y) {
+      const margem = 12;
+      const maxX = window.innerWidth - botaoNao.offsetWidth - margem;
+      const maxY = window.innerHeight - botaoNao.offsetHeight - margem;
+
+      const novoX = Math.max(margem, Math.min(maxX, x));
+      const novoY = Math.max(95, Math.min(maxY, y));
+
+      botaoNao.style.left = novoX + "px";
+      botaoNao.style.top = novoY + "px";
+      botaoNao.style.transform = `rotate(${Math.random() * 18 - 9}deg)`;
+    }
+
+    function fugirDoPonto(px, py) {
+      const rect = botaoNao.getBoundingClientRect();
+      const centroX = rect.left + rect.width / 2;
+      const centroY = rect.top + rect.height / 2;
+
+      let dx = centroX - px;
+      let dy = centroY - py;
+      const distancia = Math.hypot(dx, dy) || 1;
+
+      dx /= distancia;
+      dy /= distancia;
+
+      const pulo = Math.min(250, Math.max(130, 260 - distancia));
+      let novoX = rect.left + dx * pulo + (Math.random() * 70 - 35);
+      let novoY = rect.top + dy * pulo + (Math.random() * 70 - 35);
+
+      if (novoX < 20 || novoX > window.innerWidth - rect.width - 20) {
+        novoX = Math.random() * (window.innerWidth - rect.width - 40) + 20;
+      }
+
+      if (novoY < 95 || novoY > window.innerHeight - rect.height - 20) {
+        novoY = Math.random() * (window.innerHeight - rect.height - 115) + 95;
+      }
+
+      moverBotaoPara(novoX, novoY);
+      tentativasNao++;
+
+      if (tentativasNao % 3 === 0) {
+        recado.textContent = mensagens[Math.floor(Math.random() * mensagens.length)];
+        setTimeout(() => recado.textContent = "", 1350);
+      }
+    }
+
+    document.addEventListener("mousemove", (e) => {
+      const rect = botaoNao.getBoundingClientRect();
+      const centroX = rect.left + rect.width / 2;
+      const centroY = rect.top + rect.height / 2;
+      const distancia = Math.hypot(e.clientX - centroX, e.clientY - centroY);
+
+      if (distancia < 125) fugirDoPonto(e.clientX, e.clientY);
+    });
+
+    botaoNao.addEventListener("mouseenter", (e) => fugirDoPonto(e.clientX, e.clientY));
+    botaoNao.addEventListener("click", (e) => {
+      e.preventDefault();
+      fugirDoPonto(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+    });
+
+    botaoNao.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const toque = e.touches[0];
+      fugirDoPonto(toque.clientX, toque.clientY);
+    }, { passive: false });
+
+    botaoSim.addEventListener("click", () => {
+      modal.classList.add("ativo");
+      iniciarConfete();
+    });
+
+    fechar.addEventListener("click", () => {
+      modal.classList.remove("ativo");
+    });
+
+    function iniciarConfete() {
+      confetes = Array.from({ length: 170 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height,
+        w: Math.random() * 8 + 5,
+        h: Math.random() * 12 + 6,
+        vy: Math.random() * 3 + 3,
+        vx: Math.random() * 2 - 1,
+        rot: Math.random() * Math.PI,
+        vr: Math.random() * 0.18 - 0.09,
+        vida: Math.random() * 90 + 100
+      }));
+
+      if (!animandoConfete) {
+        animandoConfete = true;
+        animarConfete();
+      }
+    }
+
+    function animarConfete() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confetes.forEach((c) => {
+        c.x += c.vx;
+        c.y += c.vy;
+        c.rot += c.vr;
+        c.vida--;
+
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.rot);
+        ctx.fillStyle = ["#f03e3e", "#f59f00", "#2f9e44", "#1c7ed6", "#ffd43b"][Math.floor(Math.random() * 5)];
+        ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+        ctx.restore();
+      });
+
+      confetes = confetes.filter(c => c.vida > 0 && c.y < canvas.height + 30);
+
+      if (confetes.length > 0) {
+        requestAnimationFrame(animarConfete);
+      } else {
+        animandoConfete = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    const easter = document.getElementById("easter");
+    const ornitorrinco = document.getElementById("ornitorrinco");
+    const balao = document.getElementById("balao");
+
+    let cliquesEaster = 0;
+    let timerEaster;
+
+    easter.addEventListener("click", () => {
+      cliquesEaster++;
+
+      clearTimeout(timerEaster);
+      timerEaster = setTimeout(() => cliquesEaster = 0, 1600);
+
+      if (cliquesEaster >= 5) {
+        cliquesEaster = 0;
+        ornitorrinco.classList.add("ativo");
+        balao.classList.add("ativo");
+
+        setTimeout(() => {
+          ornitorrinco.classList.remove("ativo");
+          balao.classList.remove("ativo");
+        }, 5200);
+      }
+    });
+  </script>
 </body>
 </html>
