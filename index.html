@@ -597,26 +597,15 @@
     const ornitorrinco = document.getElementById("ornitorrinco");
     const balao = document.getElementById("balao");
 
-    let cliquesEaster = 0;
-    let timerEaster;
+   easter.addEventListener("click", () => {
+    ornitorrinco.classList.add("ativo");
+    balao.classList.add("ativo");
 
-    easter.addEventListener("click", () => {
-      cliquesEaster++;
-
-      clearTimeout(timerEaster);
-      timerEaster = setTimeout(() => cliquesEaster = 0, 1600);
-
-      if (cliquesEaster >= 5) {
-        cliquesEaster = 0;
-        ornitorrinco.classList.add("ativo");
-        balao.classList.add("ativo");
-
-        setTimeout(() => {
-          ornitorrinco.classList.remove("ativo");
-          balao.classList.remove("ativo");
-        }, 5200);
-      }
-    });
+    setTimeout(() => {
+        ornitorrinco.classList.remove("ativo");
+        balao.classList.remove("ativo");
+    }, 5200);
+});
   </script>
 </body>
 </html>
